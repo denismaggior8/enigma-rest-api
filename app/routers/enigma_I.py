@@ -9,8 +9,6 @@ from ReflectorUKWA import ReflectorUKWA
 from EtwPassthrough import EtwPassthrough
 from EnigmaI import EnigmaI
 
-
-
 root_path = "enigma-api"
 api_version = "v1"
 
@@ -20,7 +18,7 @@ router = APIRouter(
 
 
 @router.post("/encrypt")
-async def encrypt(config: EnigmaIRequest) -> EnigmaIResponse:
+async def encrypt(request: EnigmaIRequest) -> EnigmaIResponse:
     plugboard = PlugboardPassthrough()
     rotor1 = EnigmaIRotorI(0)
     rotor2 = EnigmaIRotorI(0)
@@ -28,4 +26,4 @@ async def encrypt(config: EnigmaIRequest) -> EnigmaIResponse:
     reflector = ReflectorUKWA()
     etw = EtwPassthrough()
     enigma = EnigmaI(plugboard, rotor3, rotor2, rotor1, reflector, etw, True)
-    return EnigmaIResponse(cyphertext=enigma.input_string(config.cleartext.lower()).upper())
+    return EnigmaIResponse(cyphertext=enigma.input_string(request.cleartext.lower()).upper())
