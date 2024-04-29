@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from ..models import EnigmaIConfig
+from ..models.enigma_I_models import EnigmaIRequest, EnigmaIResponse
 from EnigmaIRotorI import EnigmaIRotorI
 from EnigmaIRotorII import EnigmaIRotorII
 from EnigmaIRotorIII import EnigmaIRotorIII
@@ -11,14 +11,16 @@ from EnigmaI import EnigmaI
 
 
 
-router = APIRouter()
-
-
-root_path = "api"
+root_path = "enigma-api"
 api_version = "v1"
 
-@router.post("/{root_path}/{api_version}/enigma/I/encrypt".format(root_path = root_path, api_version = api_version))
-async def update_item(config: EnigmaIConfig):
+router = APIRouter(
+            prefix="/{root_path}/{api_version}/enigma/I".format(root_path = root_path, api_version = api_version)
+        )
+
+
+@router.post("/encrypt")
+async def encrypt(config: EnigmaIRequest) -> EnigmaIResponse:
     plugboard = PlugboardPassthrough()
     rotor1 = EnigmaIRotorI(0)
     rotor2 = EnigmaIRotorI(0)
@@ -26,5 +28,4 @@ async def update_item(config: EnigmaIConfig):
     reflector = ReflectorUKWA()
     etw = EtwPassthrough()
     enigma = EnigmaI(plugboard, rotor3, rotor2, rotor1, reflector, etw, True)
-    my_encrypted_string = enigma.input_string(config.cleartext.lower())
-    return my_encrypted_string.upper()
+    return EnigmaIResponse(cyphertext=enigma.input_string(config.cleartext.lower()).upper())
