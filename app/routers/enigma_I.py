@@ -6,7 +6,6 @@ from enigmapython.Utils import Utils
 from enigmapython.Rotor import Rotor
 from enigmapython.EtwPassthrough import EtwPassthrough
 from enigmapython.EnigmaI import EnigmaI
-from enigmapython.EnigmaIRotorI import EnigmaIRotorI
 
 import app.config
 
