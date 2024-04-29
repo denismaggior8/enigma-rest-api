@@ -12,9 +12,6 @@ class RotorConfig (BaseModel):
     position: int = Field(ge=0, le=25, default=0)
     ring: int = Field(ge=0, le=25, default=1)
 
-class ReflectorConfig (BaseModel):
-    pass
-
 class Rotors (BaseModel):
     List[RotorConfig] 
 

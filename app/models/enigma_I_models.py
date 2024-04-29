@@ -8,19 +8,16 @@ class EnigmaIRotorsEnum(str, Enum):
     rotor_III = 'III'
 
 class EnigmaIReflectorsEnum(str, Enum):
-    reflector_A = 'A'
-    reflector_B = 'B'
-    reflector_C = 'C'
+    reflector_A = 'UKW-A'
+    reflector_B = 'UKW-B'
+    reflector_C = 'UKW-C'
 
 class EnigmaIRotorConfig (RotorConfig):
     type: EnigmaIRotorsEnum
 
-class EnigmaIReflectorConfig (ReflectorConfig):
-    type: EnigmaIReflectorsEnum
-
 class EnigmaIRequest(EnigmaBaseRequest):
     rotors: List[EnigmaIRotorConfig] = Field(min_items=3, max_items=3)
-    reflector: Optional[EnigmaIReflectorConfig]
+    reflector: Optional[EnigmaIReflectorsEnum]
      
 class EnigmaIResponse(EnigmaBaseResponse):
     pass
