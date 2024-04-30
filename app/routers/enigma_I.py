@@ -1,25 +1,23 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from ..models.enigma_I_models import EnigmaIRequest, EnigmaIResponse
-from enigmapython.PlugboardPassthrough import PlugboardPassthrough
-from enigmapython.Rotor import Rotor
+from enigmapython.SwappablePlugboard import SwappablePlugboard
+from enigmapython.Rotor import Rotor 
 from enigmapython.Reflector import Reflector
 from enigmapython.EtwPassthrough import EtwPassthrough
-from enigmapython.EnigmaI import EnigmaI
+from enigmapython.Enigma import Enigma
+
 
 import app.config
 
-root_path = "enigma-api"
-api_version = "v1"
-
-router = APIRouter(
-            prefix="/{root_path}/{api_version}/enigma/I".format(root_path = root_path, api_version = api_version)
-        )
 
 
-@router.post("/encrypt")
-async def encrypt(request: EnigmaIRequest) -> EnigmaIResponse:
-    plugboard = PlugboardPassthrough()
+router = APIRouter()
+
+
+@router.post("/{model}/encrypt")
+async def encrypt(model: str, request: EnigmaIRequest) -> EnigmaIResponse:
+    plugboard = SwappablePlugboard()
 
     rotor1 = Rotor.get_instance_from_tag("I_"+request.rotors[0].type)
     rotor1.position = request.rotors[0].position
@@ -37,6 +35,15 @@ async def encrypt(request: EnigmaIRequest) -> EnigmaIResponse:
 
     etw = EtwPassthrough()
 
-    enigma = EnigmaI(plugboard, rotor3, rotor2, rotor1, reflector, etw, True)
-
+    enigma = Enigma(
+        plugboard = plugboard,
+        rotors = [rotor3,rotor2,rotor1],
+        reflector = reflector,
+        etw = etw,
+        auto_increment_rotors = request.auto_increment_rotors
+        )
+    
+    for plugboard_entry in request.plugboard.wirings:
+        plugboard.swap(plugboard_entry.from_letter.lower(),plugboard_entry.to_letter.lower())
+    
     return EnigmaIResponse(cyphertext=enigma.input_string(request.cleartext.lower()).upper())

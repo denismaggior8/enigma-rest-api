@@ -24,6 +24,7 @@ class Plugboard (BaseModel):
 
 class EnigmaBaseRequest (BaseModel):
     plugboard: Optional[Plugboard]
+    auto_increment_rotors: bool = Field(default=True)
     cleartext: str = Field(regex=allowed_chars_regex, min_length=1, max_length=128)
 
 class EnigmaBaseResponse (BaseModel):
