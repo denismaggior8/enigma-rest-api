@@ -6,14 +6,19 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
 
-root_path = "enigma-api"
-api_version = "v1"
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["10/minute"])
 
+
+root_path = "enigma-api"
+api_version = "v1"
+
+
 app = FastAPI(
-        prefix="/{root_path}/{api_version}/enigma".format(root_path = root_path, api_version = api_version)
+        #root_path="/{root_path}/{api_version}/enigma".format(root_path = root_path, api_version = api_version),
+        #openapi_url = "/{root_path}/{api_version}/enigma".format(root_path = root_path, api_version = api_version)+"/openapi.json"
     )
+
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)

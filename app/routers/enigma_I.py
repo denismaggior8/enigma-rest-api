@@ -10,9 +10,10 @@ from enigmapython.Enigma import Enigma
 
 import app.config
 
+root_path = "enigma-api"
+api_version = "v1"
 
-
-router = APIRouter()
+router = APIRouter(prefix="/{root_path}/{api_version}/enigma".format(root_path = root_path, api_version = api_version))
 
 
 @router.post("/{model}/encrypt")
@@ -43,7 +44,7 @@ async def encrypt(model: str, request: EnigmaIRequest) -> EnigmaIResponse:
         auto_increment_rotors = request.auto_increment_rotors
         )
     
-    for plugboard_entry in request.plugboard.wirings:
-        plugboard.swap(plugboard_entry.from_letter.lower(),plugboard_entry.to_letter.lower())
+    for plugboard_wiring in request.plugboard.wirings:
+        plugboard.swap(plugboard_wiring.from_letter.lower(),plugboard_wiring.to_letter.lower())
     
     return EnigmaIResponse(cyphertext=enigma.input_string(request.cleartext.lower()).upper())
