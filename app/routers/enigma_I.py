@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from ..models.enigma_I_models import EnigmaIRequest, EnigmaIResponse
 from enigmapython.PlugboardPassthrough import PlugboardPassthrough
 from enigmapython.Rotor import Rotor
+from enigmapython.Reflector import Reflector
 from enigmapython.EtwPassthrough import EtwPassthrough
 from enigmapython.EnigmaI import EnigmaI
 
@@ -32,10 +33,10 @@ async def encrypt(request: EnigmaIRequest) -> EnigmaIResponse:
     rotor3.position = request.rotors[2].position
     rotor3.ring = request.rotors[2].ring
     
-    reflector = Rotor.get_instance_from_tag(request.reflector)
+    reflector = Reflector.get_instance_from_tag(request.reflector)
 
     etw = EtwPassthrough()
 
     enigma = EnigmaI(plugboard, rotor3, rotor2, rotor1, reflector, etw, True)
-    
+
     return EnigmaIResponse(cyphertext=enigma.input_string(request.cleartext.lower()).upper())
