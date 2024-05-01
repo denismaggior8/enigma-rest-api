@@ -20,17 +20,15 @@ router = APIRouter(prefix="/{root_path}/{api_version}/enigma".format(root_path =
 async def encrypt(model: str, request: EnigmaIRequest) -> EnigmaIResponse:
     plugboard = SwappablePlugboard()
 
-    rotor1 = Rotor.get_instance_from_tag("I_"+request.rotors[0].type)
-    rotor1.position = request.rotors[0].position
-    rotor1.ring = request.rotors[0].ring
+    rotors = []
 
-    rotor2 = Rotor.get_instance_from_tag("I_"+request.rotors[1].type)
-    rotor2.position = request.rotors[1].position
-    rotor2.ring = request.rotors[1].ring
+    for i in range(len(request.rotors)):
+        rotor = Rotor.get_instance_from_tag("I_"+request.rotors[i].type)
+        rotor.position = request.rotors[i].position
+        rotor.ring = request.rotors[i].ring
+        rotors.append(rotor)
 
-    rotor3 = Rotor.get_instance_from_tag("I_"+request.rotors[2].type)
-    rotor3.position = request.rotors[2].position
-    rotor3.ring = request.rotors[2].ring
+    rotors.reverse()
     
     reflector = Reflector.get_instance_from_tag(request.reflector)
 
@@ -38,7 +36,7 @@ async def encrypt(model: str, request: EnigmaIRequest) -> EnigmaIResponse:
 
     enigma = Enigma(
         plugboard = plugboard,
-        rotors = [rotor3,rotor2,rotor1],
+        rotors = rotors,
         reflector = reflector,
         etw = etw,
         auto_increment_rotors = request.auto_increment_rotors
