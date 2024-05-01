@@ -16,7 +16,7 @@ class EnigmaIRotorConfig (RotorConfig):
     type: EnigmaIRotorsEnum
 
 class EnigmaIRequest(EnigmaBaseRequest):
-    rotors: List[EnigmaIRotorConfig] = Field(min_items=0, max_items=3)
+    rotors: List[EnigmaIRotorConfig] = Field(min_items=3, max_items=3)
     reflector: Optional[EnigmaIReflectorsEnum]
      
 class EnigmaIResponse(EnigmaBaseResponse):
