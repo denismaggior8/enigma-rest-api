@@ -19,7 +19,6 @@ router = APIRouter(prefix="/{root_path}/{api_version}/enigma".format(root_path =
 @router.post("/{model}/encrypt")
 async def encrypt(model: str, request: EnigmaIRequest) -> EnigmaIResponse:
     
-
     rotors = []
     for i in range(len(request.rotors)):
         rotor = Rotor.get_instance_from_tag("I_"+request.rotors[i].type)
