@@ -25,7 +25,7 @@ async def encrypt(model: str, request: EnigmaIRequest) -> EnigmaIResponse:
         rotor.position = request.rotors[i].position
         rotor.ring = request.rotors[i].ring
         rotors.append(rotor)
-    rotors.reverse()
+    #rotors.reverse()
     
     reflector = Reflector.get_instance_from_tag(request.reflector)
 
@@ -49,6 +49,6 @@ async def encrypt(model: str, request: EnigmaIRequest) -> EnigmaIResponse:
     for i in range(len(enigma.rotors)):
         responseRotorConfig = ResponseRotorConfig(position=enigma.rotors[i].position,ring=enigma.rotors[i].ring)
         new_rotors.append(responseRotorConfig)
-    new_rotors.reverse()
+    #new_rotors.reverse()
 
     return EnigmaIResponse(cyphertext=cypher_text,rotors=new_rotors)
