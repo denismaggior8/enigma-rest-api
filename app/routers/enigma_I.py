@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from ..models.enigma_I_models import EnigmaIRequest, EnigmaIResponse
+from ..models.enigma_I_models import EnigmaIRequest, EnigmaIResponse, RequestRotorConfig, ResponseRotorConfig
 from enigmapython.SwappablePlugboard import SwappablePlugboard
 from enigmapython.Rotor import Rotor 
 from enigmapython.Reflector import Reflector
@@ -42,5 +42,13 @@ async def encrypt(model: str, request: EnigmaIRequest) -> EnigmaIResponse:
         etw = etw,
         auto_increment_rotors = request.auto_increment_rotors
         )
+    
+    cypher_text = enigma.input_string(request.cleartext.lower()).upper()
+    
+    new_rotors : ResponseRotorConfig = []
+    for i in range(len(enigma.rotors)):
+        responseRotorConfig = ResponseRotorConfig(position=enigma.rotors[i].position,ring=enigma.rotors[i].ring)
+        new_rotors.append(responseRotorConfig)
+    new_rotors.reverse()
 
-    return EnigmaIResponse(cyphertext=enigma.input_string(request.cleartext.lower()).upper())
+    return EnigmaIResponse(cyphertext=cypher_text,rotors=new_rotors)

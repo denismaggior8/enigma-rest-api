@@ -8,12 +8,12 @@ from typing_extensions import TypedDict
 allowed_chars_regex = r"^[A-Z]+$"
 
 
-class RotorConfig (BaseModel):
+class RequestRotorConfig (BaseModel):
     position: int = Field(ge=0, le=25, default=0)
-    ring: int = Field(ge=0, le=25, default=1)
+    ring: int = Field(ge=0, le=25, default=0)
 
-class Rotors (BaseModel):
-    List[RotorConfig] 
+class ResponseRotorConfig (BaseModel):
+    position: int = Field(ge=0, le=25, default=0)
 
 class PlugboardWiring(BaseModel):
     from_letter: str = Field(regex=allowed_chars_regex, min_length=1, max_length=1)
@@ -29,3 +29,4 @@ class EnigmaBaseRequest (BaseModel):
 
 class EnigmaBaseResponse (BaseModel):
     cyphertext: str
+    rotors: List[ResponseRotorConfig]
